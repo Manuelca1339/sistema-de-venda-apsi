@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Venda Online | Loja</title>
+    <link rel="icon" type="image/png" href="texte.png" />
+    <link rel="apple-touch-icon" href="texte.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" id="brandFallback">APSI-PNB</span>
+        <img class="brand-logo" id="brandLogo" src="texte.png" alt="APSI-PNB Tecnologia" />
+      </div>
+      <nav class="nav-tabs" aria-label="Navegacao principal">
+        <button class="nav-tab is-active" data-view="store">Loja</button>
+        <button class="nav-tab" data-view="orders">Pedidos</button>
+        <button class="nav-tab" data-view="salesControl">Controle de vendas</button>
+      </nav>
+      <div class="header-actions">
+        <button class="secondary-button compact" id="openHelp" type="button">Ajuda</button>
+        <button class="secondary-button compact" id="openScanner" type="button">Leitor QR</button>
+        <button class="cart-button" id="openCart" type="button" aria-label="Abrir carrinho">
+          Carrinho <span id="cartCount">0</span>
+        </button>
+        <button class="admin-status" id="openAdmin" type="button" aria-label="Abrir administrador">
+          <span>Administrador</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-label="Publicidade APSI-PNB">
+        <div class="hero-ad-frame">
+          <img src="site.jpg" alt="Publicidade APSI-PNB Tecnologia" />
+        </div>
+      </section>
+
+      <section class="view is-visible" id="storeView">
+        <section class="metrics" aria-label="Indicadores da loja">
+          <article>
+            <span>Produtos</span>
+            <strong id="productCount">0</strong>
+          </article>
+          <article>
+            <span>Itens no carrinho</span>
+            <strong id="metricCart">0</strong>
+          </article>
+          <article>
+            <span>Estrelas</span>
+            <strong id="metricFavorites">0</strong>
+          </article>
+          <article>
+            <span>Ticket medio</span>
+            <strong id="averageTicket">0 FCFA</strong>
+          </article>
+        </section>
+
+        <section class="moving-products" aria-label="Produtos em destaque">
+          <div class="section-head compact-head">
+            <div>
+              <h2>Produtos em movimento</h2>
+              <p>A vitrine passa automaticamente com os principais itens.</p>
+            </div>
+          </div>
+          <div class="product-marquee">
+            <div class="marquee-track" id="marqueeTrack"></div>
+          </div>
+        </section>
+
+        <div class="section-head">
+          <div>
+            <h2>Produtos</h2>
+            <p>Pesquise, filtre e adicione itens ao carrinho.</p>
+          </div>
+          <div class="toolbar">
+            <label class="search">
+              <span>Pesquisar</span>
+              <input id="searchInput" type="search" placeholder="Nome do produto" />
+            </label>
+            <label class="select-field">
+              <span>Categoria</span>
+              <select id="categorySelect">
+                <option value="all">Todas</option>
+              </select>
+            </label>
+            <label class="select-field">
+              <span>Ordenar</span>
+              <select id="sortSelect">
+                <option value="featured">Destaques</option>
+                <option value="priceAsc">Menor preco</option>
+                <option value="priceDesc">Maior preco</option>
+                <option value="stock">Mais stock</option>
+              </select>
+            </label>
+            <label class="checkbox-field">
+              <input id="favoritesOnly" type="checkbox" />
+              ☆
+            </label>
+          </div>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+
+      <section class="view" id="ordersView">
+        <div class="section-head">
+          <div>
+            <h2>Registro de vendas</h2>
+            <p>Todas as vendas impressas ou fechadas ficam guardadas neste navegador.</p>
+          </div>
+          <button class="secondary-button" id="clearOrders" type="button">Limpar pedidos</button>
+        </div>
+        <section class="customer-register" aria-label="Cadastro de cliente">
+          <div class="customer-register-head">
+            <div>
+              <span class="customer-icon" aria-hidden="true">CL</span>
+              <div>
+                <h3>Cadastro de cliente</h3>
+                <p>Guarde os dados para preencher o pedido mais rapido.</p>
+              </div>
+            </div>
+            <strong id="customerStatus">Nenhum cliente cadastrado</strong>
+          </div>
+          <form class="customer-form" id="customerForm">
+            <input id="customerId" type="hidden" />
+            <label>
+              Nome completo
+              <input id="customerName" type="text" placeholder="Nome do cliente" required />
+            </label>
+            <label>
+              Telefone / WhatsApp
+              <input id="customerPhone" type="tel" placeholder="+245 000 000 000" required />
+            </label>
+            <label>
+              Email
+              <input id="customerEmail" type="email" placeholder="cliente@email.com" />
+            </label>
+            <label>
+              Documento / NIF
+              <input id="customerDocument" type="text" placeholder="BI, NIF ou outro documento" />
+            </label>
+            <label>
+              Cidade
+              <input id="customerCity" type="text" placeholder="Cidade" required />
+            </label>
+            <label>
+              Bairro / Zona
+              <input id="customerDistrict" type="text" placeholder="Bairro ou zona" />
+            </label>
+            <label class="wide-field">
+              Morada completa
+              <textarea id="customerAddress" placeholder="Rua, casa, referencia de entrega" required></textarea>
+            </label>
+            <label>
+              Metodo preferido
+              <select id="customerPayment">
+                <option value="Dinheiro na entrega">Dinheiro na entrega</option>
+                <option value="Mobile Money">Mobile Money</option>
+                <option value="Orange Money">Orange Money</option>
+                <option value="Cartao">Cartao</option>
+                <option value="Transferencia">Transferencia</option>
+              </select>
+            </label>
+            <label class="wide-field">
+              Observacoes
+              <textarea id="customerNotes" placeholder="Horario de entrega, referencias ou pedido especial"></textarea>
+            </label>
+            <div class="customer-actions">
+              <button class="primary-button" type="submit">Guardar cliente</button>
+              <button class="secondary-button" id="useCustomerCheckout" type="button">Usar no checkout</button>
+              <button class="secondary-button" id="clearCustomer" type="button">Limpar selecao</button>
+            </div>
+          </form>
+          <div class="customer-bank">
+            <label>
+              Buscar no banco de clientes
+              <input id="customerSearch" type="search" placeholder="Nome, telefone, cidade ou documento" />
+            </label>
+            <div class="customer-list" id="customerList"></div>
+          </div>
+        </section>
+        <div class="orders-list" id="ordersList"></div>
+      </section>
+
+      <section class="view" id="salesControlView">
+        <section class="sales-lock" id="salesLock">
+          <div>
+            <h2>Controle de vendas</h2>
+            <p>Digite a senha para ver vendas, fecho diario e grafico mensal.</p>
+          </div>
+          <form id="salesControlLogin">
+            <label>
+              Senha do controle
+              <input id="salesControlPassword" type="password" autocomplete="current-password" />
+            </label>
+            <label class="checkbox-field">
+              <input id="showSalesPassword" type="checkbox" />
+              Visualizar senha
+            </label>
+            <button class="primary-button" type="submit">Entrar no controle</button>
+          </form>
+        </section>
+
+        <div class="sales-control-content" id="salesControlContent">
+          <div class="section-head">
+            <div>
+              <h2>Controle de vendas</h2>
+              <p>Veja vendas, fecho diario e progresso mensal de janeiro a dezembro.</p>
+            </div>
+            <button class="primary-button" type="button" data-print-daily-close>Imprimir fecho diario</button>
+          </div>
+
+          <section class="sales-dashboard" aria-label="Painel de controle de vendas">
+            <article class="sales-hero-card">
+              <span>Fecho de caixa de hoje</span>
+              <strong id="dailyCloseTotal">0 FCFA</strong>
+              <p id="dailyCloseMeta">0 vendas registadas hoje</p>
+            </article>
+            <article>
+              <span>Total geral vendido</span>
+              <strong id="allSalesTotal">0 FCFA</strong>
+              <p id="allSalesCount">0 vendas registadas</p>
+            </article>
+            <article>
+              <span>Ticket medio</span>
+              <strong id="controlAverageTicket">0 FCFA</strong>
+              <p>Media por venda registada</p>
+            </article>
+          </section>
+
+          <section class="sales-chart-card" aria-label="Grafico mensal de vendas">
+            <div class="sales-chart-head">
+              <div>
+                <h3>Progresso mensal</h3>
+                <p>Janeiro a dezembro</p>
+              </div>
+              <strong id="bestMonth">Melhor mes: --</strong>
+            </div>
+            <div class="monthly-chart" id="monthlyChart"></div>
+          </section>
+
+          <section class="sales-log-card" aria-label="Todas as vendas feitas">
+            <div class="sales-chart-head">
+              <div>
+                <h3>Todas as vendas feitas</h3>
+                <p>Historico completo registado neste navegador.</p>
+              </div>
+            </div>
+            <div class="sales-table" id="salesTable"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Todos os direitos reservados APSI-PNB Tecnologia. Contacto: +245 956 989 090.</p>
+      <p></p>
+    </footer>
+
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+      <div class="drawer-backdrop" id="closeCartBackdrop"></div>
+      <div class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="cartTitle">
+        <div class="drawer-head">
+          <div>
+            <h2 id="cartTitle">Carrinho</h2>
+            <p id="cartSubtitle">Nenhum item adicionado</p>
+          </div>
+          <button class="icon-button" id="closeCart" type="button" aria-label="Fechar carrinho">x</button>
+        </div>
+
+        <div class="cart-items" id="cartItems"></div>
+
+        <form class="checkout" id="checkoutForm">
+          <h3>Finalizar compra</h3>
+          <label>
+            Nome completo
+            <input name="name" type="text" placeholder="Cliente" required />
+          </label>
+          <label>
+            Email
+            <input name="email" type="email" placeholder="cliente@email.com" required />
+          </label>
+          <label>
+            Telefone / WhatsApp
+            <input name="phone" type="tel" placeholder="+245 000 000 000" required />
+          </label>
+          <label>
+            Morada de entrega
+            <textarea name="address" placeholder="Rua, cidade, codigo postal" required></textarea>
+          </label>
+          <label>
+            Metodo de pagamento
+            <select name="payment" required>
+              <option value="Dinheiro na entrega">Dinheiro na entrega</option>
+              <option value="Mobile Money">Mobile Money</option>
+              <option value="Orange Money">Orange Money</option>
+              <option value="Cartao">Cartao</option>
+              <option value="Transferencia">Transferencia</option>
+            </select>
+          </label>
+          <div class="summary">
+            <span>Subtotal</span>
+            <strong id="subtotal">0 FCFA</strong>
+          </div>
+          <div class="summary total">
+            <span>Total</span>
+            <strong id="total">0 FCFA</strong>
+          </div>
+          <div class="checkout-actions">
+            <button class="primary-button" id="checkoutButton" type="submit">Imprimir recibo</button>
+            <button class="whatsapp-button" id="whatsappCheckout" type="button">Confirmar via WhatsApp</button>
+          </div>
+        </form>
+      </div>
+    </aside>
+
+    <section class="modal" id="scannerModal" aria-hidden="true">
+      <div class="modal-backdrop" id="closeScannerBackdrop"></div>
+      <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="scannerTitle">
+        <div class="drawer-head">
+          <div>
+            <h2 id="scannerTitle">Leitor QR e codigo de barras</h2>
+            <p>Leia um QR, codigo de barras, CAT ou digite o codigo manualmente.</p>
+          </div>
+          <button class="icon-button" id="closeScanner" type="button" aria-label="Fechar leitor">x</button>
+        </div>
+        <div class="scanner-body">
+          <video id="scannerVideo" playsinline muted></video>
+          <div class="scanner-actions">
+            <button class="primary-button" id="startScanner" type="button">Ligar camera</button>
+            <button class="secondary-button" id="stopScanner" type="button">Desligar</button>
+          </div>
+          <form class="manual-code" id="manualCodeForm">
+            <label>
+              Codigo do produto
+              <input id="manualCode" type="text" placeholder="Ex: p1, QR-p1, CAT-1001 ou codigo de barras" />
+            </label>
+            <button class="primary-button" type="submit">Adicionar pelo codigo</button>
+          </form>
+          <p class="scanner-note" id="scannerNote">
+            Em alguns navegadores a camera so funciona em servidor local ou HTTPS. O campo manual continua disponivel.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="modal" id="helpModal" aria-hidden="true">
+      <div class="modal-backdrop" id="closeHelpBackdrop"></div>
+      <div class="modal-panel help-panel" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+        <div class="drawer-head">
+          <div>
+            <h2 id="helpTitle">Ajuda rapida</h2>
+            <p>Tire duvidas e confirme pedidos sem sair da loja.</p>
+          </div>
+          <button class="icon-button" id="closeHelp" type="button" aria-label="Fechar ajuda">x</button>
+        </div>
+        <div class="help-body">
+          <article>
+            <strong>Como comprar</strong>
+            <p>Adicione produtos ao carrinho, preencha os dados e confirme o pedido.</p>
+          </article>
+          <article>
+            <strong>Confirmacao por WhatsApp</strong>
+            <p>Use o botao do checkout para abrir uma mensagem pronta com produtos, total e dados de entrega.</p>
+          </article>
+          <article>
+            <strong>Leitor QR</strong>
+            <p>Leia um codigo do produto ou escreva manualmente, por exemplo CAT-1007.</p>
+          </article>
+          <button class="whatsapp-button" id="helpWhatsapp" type="button">Falar no WhatsApp</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="modal image-modal" id="imageModal" aria-hidden="true">
+      <div class="modal-backdrop" id="closeImageBackdrop"></div>
+      <div class="image-modal-panel" role="dialog" aria-modal="true" aria-labelledby="imageModalTitle">
+        <div class="image-modal-head">
+          <div>
+            <h2 id="imageModalTitle">Imagem do produto</h2>
+            <p id="imageModalCaption">Visualizacao completa</p>
+          </div>
+          <button class="icon-button" id="closeImageModal" type="button" aria-label="Fechar imagem">x</button>
+        </div>
+        <div class="image-modal-body">
+          <img id="imageModalImg" alt="Imagem ampliada do produto" />
+        </div>
+      </div>
+    </section>
+
+    <section class="modal" id="adminModal" aria-hidden="true">
+      <div class="modal-backdrop" id="closeAdminBackdrop"></div>
+      <div class="modal-panel admin-panel" role="dialog" aria-modal="true" aria-labelledby="adminTitle">
+        <div class="drawer-head">
+          <div>
+            <h2 id="adminTitle">Administrador</h2>
+            <p id="adminSubtitle">Entre para alterar produtos, categorias e promocoes.</p>
+          </div>
+          <button class="icon-button" id="closeAdmin" type="button" aria-label="Fechar administrador">x</button>
+        </div>
+
+        <form class="admin-login" id="adminLoginForm">
+          <label>
+            Palavra-passe
+            <input id="adminPassword" type="password" placeholder="Digite a senha" autocomplete="current-password" />
+          </label>
+          <button class="primary-button" type="submit">Entrar como administrador</button>
+          <p>Area prpotegida <strong>Digite a Senha do Adiministrador</strong>. Altere no codigo antes de publicar.</p>
+        </form>
+
+        <div class="admin-area" id="adminArea">
+          <div class="admin-tools">
+            <button class="secondary-button" id="logoutAdmin" type="button">Sair do administrador</button>
+            <button class="primary-button" id="newProduct" type="button">Novo produto</button>
+            <button class="secondary-button" id="applyQuarterPromo" type="button">Promocao trimestral -10%</button>
+            <button class="danger-button" id="endPromotions" type="button">Encerrar promocao</button>
+          </div>
+
+          <form class="admin-form" id="productForm">
+            <h3 id="productFormTitle">Novo produto</h3>
+            <input id="productId" type="hidden" />
+            <div class="admin-grid">
+              <label>
+                Nome
+                <input id="productName" type="text" required />
+              </label>
+              <label>
+                Categoria
+                <input id="productCategory" type="text" list="categorySuggestions" required />
+                <datalist id="categorySuggestions"></datalist>
+              </label>
+              <label>
+                Preco FCFA
+                <input id="productPrice" type="number" min="0" step="1" required />
+              </label>
+              <label>
+                Stock
+                <input id="productStock" type="number" min="0" step="1" required />
+              </label>
+              <label>
+                CAT
+                <input id="productSku" type="text" required />
+              </label>
+              <label>
+                Link da imagem
+                <input id="productImage" type="text" placeholder="Cole aqui o link da imagem" />
+              </label>
+              <label>
+                Enviar imagem do produto
+                <input id="productImageFile" type="file" accept="image/*" />
+              </label>
+            </div>
+            <div class="product-preview" id="productPreview">
+              <img id="productPreviewImage" alt="Previa do produto" />
+              <div>
+                <strong>Previa da imagem</strong>
+                <span>Use um link ou escolha uma imagem do computador.</span>
+              </div>
+            </div>
+            <div class="admin-tools">
+              <button class="primary-button" type="submit">Guardar produto</button>
+              <button class="secondary-button" id="fillSku" type="button">Gerar CAT</button>
+              <button class="secondary-button" id="clearProductImage" type="button">Limpar imagem</button>
+              <button class="secondary-button" id="cancelProductEdit" type="button">Cancelar</button>
+            </div>
+          </form>
+
+          <div class="admin-products" id="adminProducts"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
