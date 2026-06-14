@@ -124,7 +124,7 @@ button:active {
 }
 
 .brand.has-logo .brand-logo {
-  display: block;
+  display: flex;
 }
 
 .nav-tabs {
