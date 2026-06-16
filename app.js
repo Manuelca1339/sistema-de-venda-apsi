@@ -66,7 +66,6 @@ const defaultProducts = [
   },
   {
     id: "p6",
-    sku: "CAT-1006",
     name: "Relogio minimalista",
     category: "Acessorios",
     price: 59000,
