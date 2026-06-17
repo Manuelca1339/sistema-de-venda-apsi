@@ -66,6 +66,7 @@ const defaultProducts = [
   },
   {
     id: "p6",
+    sku: "CAT-1006",
     name: "Relogio minimalista",
     category: "Acessorios",
     price: 59000,
@@ -171,6 +172,7 @@ const els = {
   toast: document.querySelector("#toast"),
   navTabs: document.querySelectorAll(".nav-tab"),
   storeView: document.querySelector("#storeView"),
+  aboutView: document.querySelector("#aboutView"),
   ordersView: document.querySelector("#ordersView"),
   salesControlView: document.querySelector("#salesControlView"),
   salesLock: document.querySelector("#salesLock"),
@@ -344,7 +346,7 @@ async function hydrateFromDatabase() {
 }
 
 function products() {
-  return state.products;
+  return state.products.length ? state.products : defaultProducts;
 }
 
 function money(value) {
@@ -446,7 +448,7 @@ function getRelated(product) {
 function filteredProducts() {
   const query = normalize(els.searchInput.value);
   const category = els.categorySelect.value;
-  const onlyFavorites = els.favoritesOnly.checked;
+  const onlyFavorites = els.favoritesOnly?.checked ?? false;
   const filtered = products().filter((product) => {
     const matchesCategory = category === "all" || product.category === category;
     const matchesSearch =
@@ -468,8 +470,7 @@ function filteredProducts() {
 function productCard(product) {
   const inCart = state.cart.find((item) => item.id === product.id);
   const remaining = product.stock - (inCart?.qty ?? 0);
-  const isFavorite = state.favorites.includes(product.id);
-  const hasPromo = product.promotion?.active;
+  const hasPromo = Boolean(product.promotion?.active);
 
   return `
     <article class="product-card ${state.isAdmin ? "is-admin" : ""}">
@@ -478,19 +479,20 @@ function productCard(product) {
       </button>
       <div class="product-body">
         <div class="product-meta">
-          <span class="product-category">${iconMarkup(product.category, "product-category-icon")} ${product.category}</span>
+          <span class="product-category">${product.category}</span>
         </div>
         <h3>${product.name}</h3>
-        ${hasPromo ? '<span class="promo-badge">Promocao -10%</span>' : ""}
-        <p class="product-details">
-          <span><strong>CAT</strong>${product.sku}</span>
-          <span><strong>Stock</strong>${remaining}</span>
-        </p>
         <div class="product-footer">
           <span class="price">${money(product.price)}</span>
           <div class="product-actions">
-            <button class="favorite-button ${isFavorite ? "is-active" : ""}" type="button" data-fav="${product.id}" aria-label="Favoritar produto">${isFavorite ? "★" : "☆"}</button>
-            <button type="button" data-add="${product.id}" ${remaining <= 0 ? "disabled" : ""}>Adicionar</button>
+            <button class="order-button" type="button" data-add="${product.id}" ${remaining <= 0 ? "disabled" : ""}>
+              <span class="whatsapp-mark" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M12 3.2a8.6 8.6 0 0 0-7.3 13.1L3.6 20l3.8-1a8.6 8.6 0 1 0 4.6-15.8Zm0 1.8a6.8 6.8 0 0 1 0 13.6 6.7 6.7 0 0 1-3.5-1l-.4-.2-1.8.5.5-1.7-.3-.4A6.8 6.8 0 0 1 12 5Zm-2.4 3.6c-.2 0-.5.1-.7.4-.2.3-.8.8-.8 2 0 1.1.8 2.2.9 2.4.1.1 1.6 2.6 4 3.5 2 .8 2.4.6 2.8.6.4 0 1.4-.6 1.6-1.1.2-.5.2-1 .1-1.1l-.6-.3-1.6-.8c-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a5.6 5.6 0 0 1-2.8-2.4c-.2-.3 0-.4.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.7-1.7c-.2-.5-.4-.5-.6-.5h-.5Z" />
+                </svg>
+              </span>
+              Encomendar
+            </button>
           </div>
         </div>
       </div>
@@ -574,9 +576,9 @@ function renderOrders() {
 
   if (els.todayRevenue) els.todayRevenue.textContent = money(revenue);
   if (els.todayOrders) els.todayOrders.textContent = `${todaysOrders.length} pedidos registados`;
-  els.productCount.textContent = products().length;
-  els.metricFavorites.textContent = state.favorites.length;
-  els.averageTicket.textContent = money(average);
+  if (els.productCount) els.productCount.textContent = products().length;
+  if (els.metricFavorites) els.metricFavorites.textContent = state.favorites.length;
+  if (els.averageTicket) els.averageTicket.textContent = money(average);
 
   if (state.orders.length === 0) {
     els.ordersList.innerHTML = '<div class="empty-state">Ainda nao existem pedidos fechados.</div>';
@@ -997,6 +999,7 @@ function switchView(view) {
   state.view = view;
   els.navTabs.forEach((tab) => tab.classList.toggle("is-active", tab.dataset.view === view));
   els.storeView.classList.toggle("is-visible", view === "store");
+  els.aboutView?.classList.toggle("is-visible", view === "about");
   els.ordersView.classList.toggle("is-visible", view === "orders");
   els.salesControlView?.classList.toggle("is-visible", view === "salesControl");
   if (view === "salesControl") {
@@ -1687,7 +1690,7 @@ els.cartItems.addEventListener("click", (event) => {
 els.searchInput.addEventListener("input", renderProducts);
 els.categorySelect.addEventListener("change", renderProducts);
 els.sortSelect.addEventListener("change", renderProducts);
-els.favoritesOnly.addEventListener("change", renderProducts);
+els.favoritesOnly?.addEventListener("change", renderProducts);
 els.openCart.addEventListener("click", openCart);
 els.closeCart.addEventListener("click", closeCart);
 els.closeCartBackdrop.addEventListener("click", closeCart);

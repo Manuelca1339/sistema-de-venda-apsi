@@ -14,20 +14,28 @@
         <span class="brand-mark" id="brandFallback">APSI-PNB</span>
         <img class="brand-logo" id="brandLogo" src="texte.png" alt="APSI-PNB Tecnologia" />
       </div>
-      <nav class="nav-tabs" aria-label="Navegacao principal">
-        <button class="nav-tab is-active" data-view="store">Loja</button>
-        <button class="nav-tab" data-view="orders">Pedidos</button>
-        <button class="nav-tab" data-view="salesControl">Controle de vendas</button>
-      </nav>
       <div class="header-actions">
-        <button class="secondary-button compact" id="openHelp" type="button">Ajuda</button>
-        <button class="secondary-button compact" id="openScanner" type="button">Leitor QR</button>
-        <button class="cart-button" id="openCart" type="button" aria-label="Abrir carrinho">
-          Carrinho <span id="cartCount">0</span>
-        </button>
-        <button class="admin-status" id="openAdmin" type="button" aria-label="Abrir administrador">
-          <span>Administrador</span>
-        </button>
+        <div class="magic-menu">
+          <button class="magic-trigger" type="button" aria-label="Abrir menu" aria-haspopup="true" aria-expanded="false">
+            <span class="hamburger-line" aria-hidden="true"></span>
+            <span class="hamburger-line" aria-hidden="true"></span>
+            <span class="hamburger-line" aria-hidden="true"></span>
+          </button>
+          <div class="magic-dropdown" aria-label="Menu de ferramentas">
+            <button class="nav-tab is-active" data-view="store">Loja</button>
+            <button class="nav-tab" data-view="about">Quem somos nos</button>
+            <button class="nav-tab" data-view="orders">Pedidos</button>
+            <button class="nav-tab" data-view="salesControl">Controle de vendas</button>
+            <button class="secondary-button compact" id="openScanner" type="button">Leitor QR</button>
+            <button class="secondary-button compact" id="openHelp" type="button">Ajuda</button>
+            <button class="cart-button" id="openCart" type="button" aria-label="Abrir carrinho">
+              Carrinho <span id="cartCount">0</span>
+            </button>
+            <button class="admin-status" id="openAdmin" type="button" aria-label="Abrir administrador">
+              <span>Administrador</span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -39,25 +47,6 @@
       </section>
 
       <section class="view is-visible" id="storeView">
-        <section class="metrics" aria-label="Indicadores da loja">
-          <article>
-            <span>Produtos</span>
-            <strong id="productCount">0</strong>
-          </article>
-          <article>
-            <span>Itens no carrinho</span>
-            <strong id="metricCart">0</strong>
-          </article>
-          <article>
-            <span>Estrelas</span>
-            <strong id="metricFavorites">0</strong>
-          </article>
-          <article>
-            <span>Ticket medio</span>
-            <strong id="averageTicket">0 FCFA</strong>
-          </article>
-        </section>
-
         <section class="moving-products" aria-label="Produtos em destaque">
           <div class="section-head compact-head">
             <div>
@@ -92,16 +81,64 @@
                 <option value="featured">Destaques</option>
                 <option value="priceAsc">Menor preco</option>
                 <option value="priceDesc">Maior preco</option>
-                <option value="stock">Mais stock</option>
               </select>
-            </label>
-            <label class="checkbox-field">
-              <input id="favoritesOnly" type="checkbox" />
-              ☆
             </label>
           </div>
         </div>
         <div class="product-grid" id="productGrid"></div>
+      </section>
+
+      <section class="view" id="aboutView">
+        <section class="about-hero" aria-label="Quem somos nos">
+          <div>
+            <span>Informatica, grafica e solucoes digitais</span>
+            <h2>APSI-PNB Tecnologia</h2>
+            <p>
+              Somos uma empresa preparada para apoiar clientes particulares, lojas, escolas e negocios com
+              assistencia tecnica, venda de equipamentos, design grafico e servicos de impressao.
+            </p>
+          </div>
+        </section>
+
+        <section class="about-band" aria-label="Servicos da empresa">
+          <div class="about-copy">
+            <h3>O que fazemos</h3>
+            <p>
+              Trabalhamos com manutencao de computadores, instalacao de programas, redes, suporte tecnico,
+              venda de acessorios, criacao de logotipos, cartoes de visita, flyers, banners, carimbos e material
+              grafico para empresas.
+            </p>
+          </div>
+          <div class="about-services">
+            <article>
+              <strong>Informatica</strong>
+              <span>Reparacao, formatacao, instalacao de software, redes e suporte tecnico.</span>
+            </article>
+            <article>
+              <strong>Grafica</strong>
+              <span>Design, impressao, identidade visual, flyers, cartazes e cartoes.</span>
+            </article>
+            <article>
+              <strong>Venda e apoio</strong>
+              <span>Produtos tecnologicos, encomendas, atendimento por WhatsApp e orientacao ao cliente.</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="about-values" aria-label="Missao e valores">
+          <article>
+            <span>Missao</span>
+            <p>Entregar solucoes rapidas, claras e acessiveis para tecnologia e comunicacao visual.</p>
+          </article>
+          <article>
+            <span>Visao</span>
+            <p>Ser uma referencia local em informatica, grafica e atendimento digital de confianca.</p>
+          </article>
+          <article>
+            <span>Valores</span>
+            <p>Responsabilidade, criatividade, qualidade, pontualidade e respeito pelo cliente.</p>
+          </article>
+        </section>
       </section>
 
       <section class="view" id="ordersView">
@@ -211,6 +248,21 @@
             </div>
             <button class="primary-button" type="button" data-print-daily-close>Imprimir fecho diario</button>
           </div>
+
+          <section class="metrics control-metrics" aria-label="Indicadores da loja">
+            <article>
+              <span>Produtos</span>
+              <strong id="productCount">0</strong>
+            </article>
+            <article>
+              <span>Itens no carrinho</span>
+              <strong id="metricCart">0</strong>
+            </article>
+            <article>
+              <span>Ticket medio</span>
+              <strong id="averageTicket">0 FCFA</strong>
+            </article>
+          </section>
 
           <section class="sales-dashboard" aria-label="Painel de controle de vendas">
             <article class="sales-hero-card">
