@@ -231,37 +231,86 @@ button:active {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
 }
 
+.magic-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 58;
+  background: rgba(8, 13, 22, 0.42);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
 .magic-dropdown {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  display: none;
-  width: min(290px, calc(100vw - 28px));
-  border: 1px solid var(--line);
+  position: fixed;
+  top: 112px;
+  right: -390px;
+  z-index: 60;
+  display: grid;
+  width: min(360px, calc(100vw - 28px));
+  max-height: calc(100dvh - 132px);
+  overflow: auto;
+  gap: 12px;
+  border: 1px solid rgba(10, 79, 160, 0.16);
   border-radius: 8px;
-  padding: 10px;
+  padding: 14px;
   background: var(--surface);
   box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 180ms ease,
+    right 220ms ease;
 }
 
-.magic-dropdown::before {
-  content: "";
-  position: absolute;
-  top: -7px;
-  right: 26px;
-  width: 14px;
-  height: 14px;
-  transform: rotate(45deg);
-  border-left: 1px solid var(--line);
-  border-top: 1px solid var(--line);
-  background: var(--surface);
+.magic-menu.is-open .magic-backdrop {
+  opacity: 1;
+  pointer-events: auto;
 }
 
-.magic-menu:hover .magic-dropdown,
-.magic-menu:focus-within .magic-dropdown {
+.magic-menu.is-open .magic-dropdown,
+.magic-dropdown.is-open {
+  display: grid;
+  opacity: 1;
+  pointer-events: auto;
+  right: 18px;
+}
+
+.menu-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+
+.menu-panel-head strong,
+.menu-panel-head span,
+.menu-section > span {
+  display: block;
+}
+
+.menu-panel-head strong {
+  color: #0b4186;
+  font-size: 20px;
+}
+
+.menu-panel-head span,
+.menu-section > span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.menu-section {
   display: grid;
   gap: 8px;
-  animation: magicDrop 170ms ease both;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
 }
 
 .magic-dropdown .nav-tab,
@@ -556,6 +605,25 @@ main {
   gap: 12px;
   align-items: end;
   flex-wrap: wrap;
+}
+
+.quick-search {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) repeat(2, minmax(170px, 0.8fr));
+  gap: 12px;
+  margin: -4px 0 18px;
+}
+
+.quick-search-card {
+  border: 1px solid rgba(10, 79, 160, 0.14);
+  border-radius: 8px;
+  padding: 12px;
+  background: linear-gradient(180deg, #ffffff, #f8fbff);
+  box-shadow: 0 10px 24px rgba(13, 60, 120, 0.07);
+}
+
+.quick-search-card span {
+  color: #0b4186;
 }
 
 .category-menu {
@@ -2128,21 +2196,31 @@ textarea {
 
 @media (max-width: 880px) {
   .topbar {
-    grid-template-areas: none;
-    grid-template-columns: 1fr;
+    grid-template-areas: "brand actions";
+    grid-template-columns: minmax(0, 1fr) auto;
     gap: 12px;
   }
 
   .brand,
-  .nav-tabs,
   .header-actions {
     grid-area: auto;
   }
 
+  .brand {
+    grid-area: brand;
+  }
+
+  .header-actions {
+    grid-area: actions;
+  }
+
   .nav-tabs,
-  .header-actions,
   .header-category-menu {
     justify-self: stretch;
+  }
+
+  .header-actions {
+    justify-self: end;
   }
 
   .brand {
@@ -2194,9 +2272,15 @@ textarea {
     flex-direction: column;
   }
 
+  .quick-search {
+    grid-template-columns: 1fr;
+  }
+
   .toolbar > *,
   .toolbar input,
-  .toolbar select {
+  .toolbar select,
+  .quick-search input,
+  .quick-search select {
     width: 100%;
   }
 
@@ -2250,9 +2334,9 @@ textarea {
 
   .brand-mark,
   .brand-logo {
-    min-width: 130px;
-    width: min(calc(100vw - 28px), 380px);
-    height: 82px;
+    min-width: 0;
+    width: min(calc(100vw - 112px), 300px);
+    height: 72px;
   }
 
   .cart-button {
@@ -2339,30 +2423,32 @@ textarea {
   }
 
   .header-actions {
-    justify-self: stretch;
+    justify-self: end;
     display: grid;
-    grid-template-columns: minmax(54px, 0.36fr);
+    grid-template-columns: auto;
   }
 
   .header-actions button {
-    width: 100%;
     min-width: 0;
   }
 
-  .magic-menu,
   .magic-trigger {
-    width: 100%;
+    width: 48px;
+    min-height: 44px;
   }
 
   .magic-dropdown {
-    right: auto;
-    left: 0;
-    width: calc(100vw - 28px);
+    top: 0;
+    right: -100vw;
+    width: min(88vw, 360px);
+    max-height: 100dvh;
+    min-height: 100dvh;
+    border-radius: 8px 0 0 8px;
+    padding: 16px;
   }
 
-  .magic-dropdown::before {
-    right: auto;
-    left: 26px;
+  .magic-dropdown.is-open {
+    right: 0 !important;
   }
 
   .product-preview {

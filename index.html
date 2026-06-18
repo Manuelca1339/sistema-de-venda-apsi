@@ -21,19 +21,33 @@
             <span class="hamburger-line" aria-hidden="true"></span>
             <span class="hamburger-line" aria-hidden="true"></span>
           </button>
-          <div class="magic-dropdown" aria-label="Menu de ferramentas">
-            <button class="nav-tab is-active" data-view="store">Loja</button>
-            <button class="nav-tab" data-view="about">Quem somos nos</button>
-            <button class="nav-tab" data-view="orders">Pedidos</button>
-            <button class="nav-tab" data-view="salesControl">Controle de vendas</button>
-            <button class="secondary-button compact" id="openScanner" type="button">Leitor QR</button>
-            <button class="secondary-button compact" id="openHelp" type="button">Ajuda</button>
-            <button class="cart-button" id="openCart" type="button" aria-label="Abrir carrinho">
-              Carrinho <span id="cartCount">0</span>
-            </button>
-            <button class="admin-status" id="openAdmin" type="button" aria-label="Abrir administrador">
-              <span>Administrador</span>
-            </button>
+          <div class="magic-backdrop" id="magicBackdrop" hidden></div>
+          <div class="magic-dropdown" id="magicDropdown" aria-label="Menu de ferramentas">
+            <div class="menu-panel-head">
+              <div>
+                <strong>Menu principal</strong>
+                <span>Escolha uma area da loja</span>
+              </div>
+              <button class="icon-button" id="closeMainMenu" type="button" aria-label="Fechar menu">x</button>
+            </div>
+            <div class="menu-section">
+              <span>Navegacao</span>
+              <button class="nav-tab is-active" data-view="store">Loja</button>
+              <button class="nav-tab" data-view="about">Quem somos nos</button>
+              <button class="nav-tab" data-view="orders">Pedidos</button>
+              <button class="nav-tab" data-view="salesControl">Controle de vendas</button>
+            </div>
+            <div class="menu-section">
+              <span>Ferramentas</span>
+              <button class="secondary-button compact" id="openScanner" type="button">Leitor QR</button>
+              <button class="secondary-button compact" id="openHelp" type="button">Ajuda</button>
+              <button class="cart-button" id="openCart" type="button" aria-label="Abrir carrinho">
+                Carrinho <span id="cartCount">0</span>
+              </button>
+              <button class="admin-status" id="openAdmin" type="button" aria-label="Abrir administrador">
+                <span>Administrador</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -64,26 +78,26 @@
             <h2>Produtos</h2>
             <p>Pesquise, filtre e adicione itens ao carrinho.</p>
           </div>
-          <div class="toolbar">
-            <label class="search">
-              <span>Pesquisar</span>
-              <input id="searchInput" type="search" placeholder="Nome do produto" />
-            </label>
-            <label class="select-field">
-              <span>Categoria</span>
-              <select id="categorySelect">
-                <option value="all">Todas</option>
-              </select>
-            </label>
-            <label class="select-field">
-              <span>Ordenar</span>
-              <select id="sortSelect">
-                <option value="featured">Destaques</option>
-                <option value="priceAsc">Menor preco</option>
-                <option value="priceDesc">Maior preco</option>
-              </select>
-            </label>
-          </div>
+        </div>
+        <div class="quick-search" aria-label="Procura rapida">
+          <label class="search quick-search-card">
+            <span>Pesquisar</span>
+            <input id="searchInput" type="search" placeholder="Nome do produto" />
+          </label>
+          <label class="select-field quick-search-card">
+            <span>Categoria</span>
+            <select id="categorySelect">
+              <option value="all">Todas</option>
+            </select>
+          </label>
+          <label class="select-field quick-search-card">
+            <span>Ordenar</span>
+            <select id="sortSelect">
+              <option value="featured">Destaques</option>
+              <option value="priceAsc">Menor preco</option>
+              <option value="priceDesc">Maior preco</option>
+            </select>
+          </label>
         </div>
         <div class="product-grid" id="productGrid"></div>
       </section>

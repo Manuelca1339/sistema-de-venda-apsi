@@ -170,6 +170,11 @@ const els = {
   checkoutButton: document.querySelector("#checkoutButton"),
   whatsappCheckout: document.querySelector("#whatsappCheckout"),
   toast: document.querySelector("#toast"),
+  magicMenu: document.querySelector(".magic-menu"),
+  magicTrigger: document.querySelector(".magic-trigger"),
+  magicBackdrop: document.querySelector("#magicBackdrop"),
+  magicDropdown: document.querySelector("#magicDropdown"),
+  closeMainMenu: document.querySelector("#closeMainMenu"),
   navTabs: document.querySelectorAll(".nav-tab"),
   storeView: document.querySelector("#storeView"),
   aboutView: document.querySelector("#aboutView"),
@@ -914,6 +919,21 @@ function closeScannerModal() {
   stopScanner();
   els.scannerModal.classList.remove("is-open");
   els.scannerModal.setAttribute("aria-hidden", "true");
+}
+
+function setMainMenu(open) {
+  els.magicMenu?.classList.toggle("is-open", open);
+  els.magicDropdown?.classList.toggle("is-open", open);
+  els.magicTrigger?.setAttribute("aria-expanded", String(open));
+  if (els.magicBackdrop) els.magicBackdrop.hidden = !open;
+}
+
+function toggleMainMenu() {
+  setMainMenu(!els.magicMenu?.classList.contains("is-open"));
+}
+
+function closeMainMenu() {
+  setMainMenu(false);
 }
 
 function openHelpModal() {
@@ -1691,12 +1711,21 @@ els.searchInput.addEventListener("input", renderProducts);
 els.categorySelect.addEventListener("change", renderProducts);
 els.sortSelect.addEventListener("change", renderProducts);
 els.favoritesOnly?.addEventListener("change", renderProducts);
+els.magicTrigger?.addEventListener("click", toggleMainMenu);
+els.magicBackdrop?.addEventListener("click", closeMainMenu);
+els.closeMainMenu?.addEventListener("click", closeMainMenu);
 els.openCart.addEventListener("click", openCart);
+els.openCart.addEventListener("click", closeMainMenu);
 els.closeCart.addEventListener("click", closeCart);
 els.closeCartBackdrop.addEventListener("click", closeCart);
 els.checkoutForm.addEventListener("submit", checkout);
 els.whatsappCheckout.addEventListener("click", openWhatsappConfirmation);
-els.navTabs.forEach((tab) => tab.addEventListener("click", () => switchView(tab.dataset.view)));
+els.navTabs.forEach((tab) =>
+  tab.addEventListener("click", () => {
+    switchView(tab.dataset.view);
+    closeMainMenu();
+  }),
+);
 els.salesControlLogin.addEventListener("submit", (event) => {
   event.preventDefault();
   if (els.salesControlPassword.value !== SALES_CONTROL_PASSWORD) {
@@ -1712,17 +1741,20 @@ els.showSalesPassword.addEventListener("change", () => {
   els.salesControlPassword.type = els.showSalesPassword.checked ? "text" : "password";
 });
 els.openScanner.addEventListener("click", openScannerModal);
+els.openScanner.addEventListener("click", closeMainMenu);
 els.closeScanner.addEventListener("click", closeScannerModal);
 els.closeScannerBackdrop.addEventListener("click", closeScannerModal);
 els.startScanner.addEventListener("click", startScanner);
 els.stopScanner.addEventListener("click", stopScanner);
 els.openHelp.addEventListener("click", openHelpModal);
+els.openHelp.addEventListener("click", closeMainMenu);
 els.closeHelp.addEventListener("click", closeHelpModal);
 els.closeHelpBackdrop.addEventListener("click", closeHelpModal);
 els.helpWhatsapp.addEventListener("click", openWhatsappConfirmation);
 els.closeImageModal.addEventListener("click", closeImageModal);
 els.closeImageBackdrop.addEventListener("click", closeImageModal);
 els.openAdmin.addEventListener("click", openAdminModal);
+els.openAdmin.addEventListener("click", closeMainMenu);
 els.closeAdmin.addEventListener("click", closeAdminModal);
 els.closeAdminBackdrop.addEventListener("click", closeAdminModal);
 els.adminLoginForm.addEventListener("submit", (event) => {
@@ -1807,6 +1839,7 @@ els.clearOrders.addEventListener("click", () => {
 });
 
 document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeMainMenu();
   if (event.key === "Escape" && els.imageModal.classList.contains("is-open")) {
     closeImageModal();
   }
