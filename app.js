@@ -423,22 +423,19 @@ function renderCategoryMenu(categories) {
   const groups = categories.map((category) => {
     const items = products()
       .filter((product) => product.category === category)
-      .slice(0, 4)
-      .map((product) => `<button type="button" data-find="${product.id}">${product.name}</button>`)
+      .map((product) => `<button type="button" data-find="${product.id}">${escapeHtml(product.name)}</button>`)
       .join("");
     return `
       <div class="category-group">
-        <strong>${iconMarkup(category)} ${category}</strong>
-        <button type="button" data-category="${category}">Ver todos</button>
-        ${items}
+        <button class="category-name" type="button" data-category="${escapeHtml(category)}">${iconMarkup(category)} ${escapeHtml(category)}</button>
+        <div class="category-products">${items}</div>
       </div>
     `;
   });
 
   els.categoryMenu.innerHTML = `
-    <div class="category-group">
-      <strong>${iconMarkup("Todas")} Todas as categorias</strong>
-      <button type="button" data-category="all">Ver toda a loja</button>
+    <div class="category-group all-products">
+      <button class="category-name" type="button" data-category="all">${iconMarkup("Todas")} Todos os produtos</button>
     </div>
     ${groups.join("")}
   `;
@@ -478,7 +475,7 @@ function productCard(product) {
   const hasPromo = Boolean(product.promotion?.active);
 
   return `
-    <article class="product-card ${state.isAdmin ? "is-admin" : ""}">
+    <article class="product-card ${state.isAdmin ? "is-admin" : ""}" data-product-card="${product.id}">
       <button class="product-image-button" type="button" data-preview="${product.id}" aria-label="Visualizar imagem de ${product.name}">
         <img class="product-image" src="${productImage(product)}" alt="${product.name}" data-fallback="${FALLBACK_IMAGE}" />
       </button>
@@ -517,6 +514,13 @@ function renderProducts() {
   if (filtered.length === 0) {
     els.productGrid.innerHTML = '<div class="empty-state">Nenhum produto encontrado.</div>';
   }
+}
+
+function focusProduct(productId) {
+  requestAnimationFrame(() => {
+    const card = document.querySelector(`[data-product-card="${CSS.escape(productId)}"]`);
+    (card || els.productGrid).scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 }
 
 function renderMarquee() {
@@ -1673,16 +1677,22 @@ document.addEventListener("click", (event) => {
   }
   if (printDailyCloseButton) printDailyClose();
   if (category) {
+    switchView("store");
     els.categorySelect.value = category.dataset.category;
     els.searchInput.value = "";
     renderProducts();
+    els.productGrid.scrollIntoView({ behavior: "smooth", block: "start" });
+    closeMainMenu();
   }
   if (find) {
     const product = products().find((item) => item.id === find.dataset.find);
     if (product) {
+      switchView("store");
       els.categorySelect.value = "all";
       els.searchInput.value = product.name;
       renderProducts();
+      focusProduct(product.id);
+      closeMainMenu();
     }
   }
 });
